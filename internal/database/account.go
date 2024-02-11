@@ -66,3 +66,16 @@ func (a *Account) FindOneById(id string) (Account, error) {
 
 	return Account{ID: id, Name: name, Email: email}, nil
 }
+
+func (a *Account) FindByTransactionId(transactionId string) (Account, error) {
+	var id, name, email string
+
+	err := a.db.QueryRow("SELECT a.id, a.name, a.email FROM accounts a JOIN transactions t ON a.id = t.account_id WHERE t.id = $1", transactionId).
+		Scan(&id, &name, &email)
+
+	if err != nil {
+		return Account{}, err
+	}
+
+	return Account{ID: id, Name: name, Email: email}, nil
+}

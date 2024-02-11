@@ -68,3 +68,28 @@ func (t *Transaction) FindOneById(id string) (Transaction, error) {
 
 	return Transaction{ID: id, Amount: amount, AccountId: accountId}, nil
 }
+
+func (t *Transaction) FindByAccountId(accountId string) ([]Transaction, error) {
+	rows, err := t.db.Query("SELECT id, amount, account_id FROM transactions WHERE account_id = $1", accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	transactions := []Transaction{}
+
+	for rows.Next() {
+		var amount float64
+		var id, accountId string
+
+		if err := rows.Scan(&id, &amount, &accountId); err != nil {
+			return nil, err
+		}
+
+		transactions = append(transactions, Transaction{ID: id, Amount: amount, AccountId: accountId})
+	}
+
+	return transactions, nil
+}

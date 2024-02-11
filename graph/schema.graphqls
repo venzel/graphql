@@ -1,24 +1,19 @@
-scalar DateTime
-
 type Transaction {
     id: ID!
     amount: Float!
-    accounts: [Account!]!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    account: Account!
+}
+
+input NewTransaction {
+    amount: Float!
+    accountId: ID!
 }
 
 type Account {
     id: ID!
     name: String!
     email: String!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-}
-
-input NewTransaction {
-    amount: Float!
-    accountId: ID!
+    transactions: [Transaction!]!
 }
 
 input NewAccount {

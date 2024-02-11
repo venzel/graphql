@@ -6,9 +6,31 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"graphql/graph/model"
 )
 
+// Transactions is the resolver for the transactions field.
+func (r *accountResolver) Transactions(ctx context.Context, obj *model.Account) ([]*model.Transaction, error) {
+	transactions, err := r.TransactionDB.FindByAccountId(obj.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*model.Transaction
+
+	for _, transaction := range transactions {
+		result = append(result, &model.Transaction{
+			ID:     transaction.ID,
+			Amount: transaction.Amount,
+		})
+	}
+
+	return result, nil
+}
+
+// CreateTransaction is the resolver for the createTransaction field.
 func (r *mutationResolver) CreateTransaction(ctx context.Context, input model.NewTransaction) (*model.Transaction, error) {
 	transaction, err := r.TransactionDB.Create(input.Amount, input.AccountID)
 
@@ -22,6 +44,7 @@ func (r *mutationResolver) CreateTransaction(ctx context.Context, input model.Ne
 	}, nil
 }
 
+// CreateAccount is the resolver for the createAccount field.
 func (r *mutationResolver) CreateAccount(ctx context.Context, input model.NewAccount) (*model.Account, error) {
 	account, err := r.AccountDB.Create(input.Name, input.Email)
 
@@ -36,6 +59,7 @@ func (r *mutationResolver) CreateAccount(ctx context.Context, input model.NewAcc
 	}, nil
 }
 
+// Transactions is the resolver for the transactions field.
 func (r *queryResolver) Transactions(ctx context.Context) ([]*model.Transaction, error) {
 	transactions, err := r.TransactionDB.FindAll()
 
@@ -55,6 +79,7 @@ func (r *queryResolver) Transactions(ctx context.Context) ([]*model.Transaction,
 	return result, nil
 }
 
+// Accounts is the resolver for the accounts field.
 func (r *queryResolver) Accounts(ctx context.Context) ([]*model.Account, error) {
 	accounts, err := r.AccountDB.FindAll()
 
@@ -75,9 +100,44 @@ func (r *queryResolver) Accounts(ctx context.Context) ([]*model.Account, error) 
 	return result, nil
 }
 
+// Account is the resolver for the account field.
+func (r *transactionResolver) Account(ctx context.Context, obj *model.Transaction) (*model.Account, error) {
+	account, err := r.AccountDB.FindByTransactionId(obj.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Account{
+		ID:    account.ID,
+		Name:  account.Name,
+		Email: account.Email,
+	}, nil
+}
+
+// Account returns AccountResolver implementation.
+func (r *Resolver) Account() AccountResolver { return &accountResolver{r} }
+
+// Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
+// Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// Transaction returns TransactionResolver implementation.
+func (r *Resolver) Transaction() TransactionResolver { return &transactionResolver{r} }
+
+type accountResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type transactionResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *transactionResolver) Accounts(ctx context.Context, obj *model.Transaction) (*model.Account, error) {
+	panic(fmt.Errorf("not implemented: Accounts - accounts"))
+}
