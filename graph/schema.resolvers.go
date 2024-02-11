@@ -10,14 +10,31 @@ import (
 	"graphql/graph/model"
 )
 
-// CreateTransaction is the resolver for the createTransaction field.
 func (r *mutationResolver) CreateTransaction(ctx context.Context, input model.NewTransaction) (*model.Transaction, error) {
-	panic(fmt.Errorf("not implemented: CreateTransaction - createTransaction"))
+	transaction, err := r.TransactionDB.Create(input.Amount, input.AccountID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Transaction{
+		ID:     transaction.ID,
+		Amount: transaction.Amount,
+	}, nil
 }
 
-// CreateAccount is the resolver for the createAccount field.
 func (r *mutationResolver) CreateAccount(ctx context.Context, input model.NewAccount) (*model.Account, error) {
-	panic(fmt.Errorf("not implemented: CreateAccount - createAccount"))
+	account, err := r.AccountDB.Create(input.Name, input.Email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Account{
+		ID:    account.ID,
+		Name:  account.Name,
+		Email: account.Email,
+	}, nil
 }
 
 // Transactions is the resolver for the transactions field.
