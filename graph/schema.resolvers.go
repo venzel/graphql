@@ -42,9 +42,24 @@ func (r *queryResolver) Transactions(ctx context.Context) ([]*model.Transaction,
 	panic(fmt.Errorf("not implemented: Transactions - transactions"))
 }
 
-// Accounts is the resolver for the accounts field.
 func (r *queryResolver) Accounts(ctx context.Context) ([]*model.Account, error) {
-	panic(fmt.Errorf("not implemented: Accounts - accounts"))
+	accounts, err := r.AccountDB.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*model.Account
+
+	for _, account := range accounts {
+		result = append(result, &model.Account{
+			ID:    account.ID,
+			Name:  account.Name,
+			Email: account.Email,
+		})
+	}
+
+	return result, nil
 }
 
 // Mutation returns MutationResolver implementation.
