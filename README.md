@@ -145,9 +145,9 @@ sqlite3 --version
 # Acessa o banco
 sqlite3 data.db
 # Cria tabela accounts
-sqlite> create table accounts (id string PRIMARY KEY, name string, email string);
+sqlite> create table accounts (id string, name string, email string);
 # Cria a tabela transactions
-sqlite> create table transactions (id string PRIMARY KEY, amount decimal, accountId string);
+sqlite> create table transactions (id string, amount decimal, account_id string);
 # Lista os dados da tabela
 sqlite> select * from accounts;
 # Para sair
@@ -165,7 +165,7 @@ sqlite> DROP TABLE accounts;
 # Insere um registro na tabela accounts
 sqlite> INSERT INTO accounts (id, name, email) VALUES ('xx0011', 'tiago', 'tiago@gmail.com');
 # Insere um registro na tabela transactions
-sqlite> INSERT INTO transactions (id, amount, accountId) VALUES ('kk0033', 33.20, 'xx0011');
+sqlite> INSERT INTO transactions (id, amount, account_id) VALUES ('kk0033', 33.20, 'xx0011');
 ```
 
 </details>

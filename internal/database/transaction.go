@@ -20,7 +20,7 @@ func NewTransaction(db *sql.DB) *Transaction {
 func (t *Transaction) Create(amount float64, accountId string) (Transaction, error) {
 	id := uuid.New().String()
 
-	_, err := t.db.Exec("INSERT INTO transactions (id, amount, accountId) VALUES ($1, $2, $3)",
+	_, err := t.db.Exec("INSERT INTO transactions (id, amount, account_id) VALUES ($1, $2, $3)",
 		id, amount, accountId)
 
 	if err != nil {
@@ -31,7 +31,7 @@ func (t *Transaction) Create(amount float64, accountId string) (Transaction, err
 }
 
 func (t *Transaction) FindAll() ([]Transaction, error) {
-	rows, err := t.db.Query("SELECT id, amount, accountId FROM transactions")
+	rows, err := t.db.Query("SELECT id, amount, account_id FROM transactions")
 
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (t *Transaction) FindOneById(id string) (Transaction, error) {
 	var amount float64
 	var accountId string
 
-	err := t.db.QueryRow("SELECT amount, accountId FROM transactions WHERE id = $1", id).
+	err := t.db.QueryRow("SELECT amount, account_id FROM transactions WHERE id = $1", id).
 		Scan(&amount, &accountId)
 
 	if err != nil {
