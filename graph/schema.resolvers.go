@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"graphql/graph/model"
 )
 
@@ -37,9 +36,23 @@ func (r *mutationResolver) CreateAccount(ctx context.Context, input model.NewAcc
 	}, nil
 }
 
-// Transactions is the resolver for the transactions field.
 func (r *queryResolver) Transactions(ctx context.Context) ([]*model.Transaction, error) {
-	panic(fmt.Errorf("not implemented: Transactions - transactions"))
+	transactions, err := r.TransactionDB.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*model.Transaction
+
+	for _, transaction := range transactions {
+		result = append(result, &model.Transaction{
+			ID:     transaction.ID,
+			Amount: transaction.Amount,
+		})
+	}
+
+	return result, nil
 }
 
 func (r *queryResolver) Accounts(ctx context.Context) ([]*model.Account, error) {
@@ -62,10 +75,8 @@ func (r *queryResolver) Accounts(ctx context.Context) ([]*model.Account, error) 
 	return result, nil
 }
 
-// Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
-// Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
