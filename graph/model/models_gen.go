@@ -2,25 +2,34 @@
 
 package model
 
+type Account struct {
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type NewAccount struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+type NewTransaction struct {
+	Amount    float64 `json:"amount"`
+	AccountID string  `json:"accountId"`
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type Transaction struct {
+	ID        string     `json:"id"`
+	Amount    float64    `json:"amount"`
+	Accounts  []*Account `json:"accounts"`
+	CreatedAt string     `json:"createdAt"`
+	UpdatedAt string     `json:"updatedAt"`
 }

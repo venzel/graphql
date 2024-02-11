@@ -10,14 +10,24 @@ import (
 	"graphql/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+// CreateTransaction is the resolver for the createTransaction field.
+func (r *mutationResolver) CreateTransaction(ctx context.Context, input model.NewTransaction) (*model.Transaction, error) {
+	panic(fmt.Errorf("not implemented: CreateTransaction - createTransaction"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+// CreateAccount is the resolver for the createAccount field.
+func (r *mutationResolver) CreateAccount(ctx context.Context, input model.NewAccount) (*model.Account, error) {
+	panic(fmt.Errorf("not implemented: CreateAccount - createAccount"))
+}
+
+// Transactions is the resolver for the transactions field.
+func (r *queryResolver) Transactions(ctx context.Context) ([]*model.Transaction, error) {
+	panic(fmt.Errorf("not implemented: Transactions - transactions"))
+}
+
+// Accounts is the resolver for the accounts field.
+func (r *queryResolver) Accounts(ctx context.Context) ([]*model.Account, error) {
+	panic(fmt.Errorf("not implemented: Accounts - accounts"))
 }
 
 // Mutation returns MutationResolver implementation.
